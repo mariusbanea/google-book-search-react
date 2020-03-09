@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+header {
+  padding: 30px 0 30px 0;
+  background: #343a40;
+  color: #fff;
+  text-align: center;
+}
+
+header h1 {
+  display: inline;
+  margin-left: 15px;
+  font-weight: 300;
+}
+
+form {
+  background: lightgray;
+  text-align: center;
+}
+
+.bookImage {
+  width: 100px;
+}
