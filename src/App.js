@@ -70,6 +70,8 @@ class App extends Component {
             params: data
         })
 
+        console.log(data)
+
         const searchURL = 'https://www.googleapis.com/books/v1/volumes'
         const queryString = this.formatQueryParams(data)
         const url = searchURL + '?' + queryString
