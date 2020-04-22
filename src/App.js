@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './App.css'
 import Search from './Search'
 import Book from './Book'
+import Header from './Header'
 
 class App extends Component {
     constructor(props) {
@@ -132,7 +133,7 @@ class App extends Component {
         const errorMessage = this.state.error ? <div>{this.state.error}</div> : false
 
         const library = this.state.books
-        
+
 
         const books = library.map((book, i) => {
             return <Book
@@ -150,9 +151,7 @@ class App extends Component {
 
         return (
             <div className="App">
-                <header>
-                    <h1>Google Book Search</h1>
-                </header>
+                <Header />
                 <Search handleSearch={this.handleSearch} />
                 {errorMessage}
                 {books}
