@@ -18,12 +18,14 @@ class App extends Component {
         }
     }
 
+    // convert query parameter from an object to a string
     formatQueryParams(params) {
         const queryItems = Object.keys(params)
             .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
         return queryItems.join('&')
     }
 
+    // if an integer is empty, undefinded or null, default it to 0
     checkInteger(inputInteger) {
         let outputValue = inputInteger
         if (inputInteger === "") {
@@ -38,6 +40,7 @@ class App extends Component {
         return outputValue
     }
 
+    // if an string is undefinded or null, default it to "no details"
     checkString(inputString) {
         let outputText = inputString
         if (inputString === undefined) {
@@ -49,6 +52,7 @@ class App extends Component {
         return outputText
     }
 
+    // if an string is undefinded or null, default it to the root url /
     checkURL(inputURL) {
         let outputURL = inputURL
         if (inputURL === undefined) {
@@ -60,24 +64,34 @@ class App extends Component {
         return outputURL
     }
 
+    //get the imput from the user
     handleSearch = (e) => {
         e.preventDefault()
         const data = {}
+        //get all the from data from the form component
         const formData = new FormData(e.target)
-        for (let value of formData) data[value[0]] = value[1]
+        //for each of the keys in form data populate it with form value
+        for (let value of formData) {
+            data[value[0]] = value[1]
+        }
 
+        //assigning the object from form data to params in the state
         this.setState({
             params: data
         })
 
         console.log(data)
 
+        //get the google books api url
         const searchURL = 'https://www.googleapis.com/books/v1/volumes'
+        //format the queryString paramters into an object
         const queryString = this.formatQueryParams(data)
+        //sent all the params to the final url
         const url = searchURL + '?' + queryString
 
         console.log(url)
 
+        //define the API call parameters
         const options = {
             method: 'GET',
             header: {
@@ -86,6 +100,7 @@ class App extends Component {
             }
         }
 
+        //useing the url and paramters above make the api call
         fetch(url, options)
             .then(res => {
                 if (!res.ok) {
