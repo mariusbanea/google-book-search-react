@@ -5,6 +5,8 @@ import Book from './Book'
 import Header from './Header'
 
 class App extends Component {
+
+    //setup the constructor witht he default props and states
     constructor(props) {
         super(props)
         this.state = {
@@ -40,7 +42,7 @@ class App extends Component {
         return outputValue
     }
 
-    // if an string is undefinded or null, default it to "no details"
+    // if a string is undefinded or null, default it to "no details"
     checkString(inputString) {
         let outputText = inputString
         if (inputString === undefined) {
@@ -52,7 +54,7 @@ class App extends Component {
         return outputText
     }
 
-    // if an string is undefinded or null, default it to the root url /
+    // if a URL is undefinded or null, default it to the root url "/"
     checkURL(inputURL) {
         let outputURL = inputURL
         if (inputURL === undefined) {
@@ -68,14 +70,16 @@ class App extends Component {
     handleSearch = (e) => {
         e.preventDefault()
         const data = {}
+
         //get all the from data from the form component
         const formData = new FormData(e.target)
+
         //for each of the keys in form data populate it with form value
         for (let value of formData) {
             data[value[0]] = value[1]
         }
 
-        //assigning the object from form data to params in the state
+        //assigning the object from the form data to params in the state
         this.setState({
             params: data
         })
@@ -84,8 +88,10 @@ class App extends Component {
 
         //get the google books api url
         const searchURL = 'https://www.googleapis.com/books/v1/volumes'
+
         //format the queryString paramters into an object
         const queryString = this.formatQueryParams(data)
+
         //sent all the params to the final url
         const url = searchURL + '?' + queryString
 
@@ -102,27 +108,41 @@ class App extends Component {
 
         //useing the url and paramters above make the api call
         fetch(url, options)
+
+            // if the api returns data ...
             .then(res => {
                 if (!res.ok) {
                     throw new Error('Something went wrong, please try again later.')
                 }
-                return res
-            })
-            .then(res => res.json())
-            .then(data => {
-                // no results validation
-                if (data.totalItems === 0) throw new Error('No books found')
 
-                // need inconsitent results validation
+                // ... convert it to json
+                return res.json()
+            })
+
+            // use the json api output
+            .then(data => {
+                // check if there are no results
+                if (data.totalItems === 0) {
+                    throw new Error('No books found')
+                }
+
                 const aBooks = data.items.map(book => {
+
+                    // get the title, authors, description, imageLinks, previewLink from "volumeInfo"
                     const { title, authors, description, imageLinks, previewLink } = book.volumeInfo
+
+                    // get the saleability, retailPrice from "saleInfo"
                     const { saleability, retailPrice } = book.saleInfo
+
+                    //if the image is not defined replace it with a no-image image
                     let imageLinksOutput = ''
                     if (imageLinks === undefined) {
                         imageLinksOutput = 'https://legacytaylorsville.com/wp-content/uploads/2015/07/No-Image-Available1.png'
                     } else {
                         imageLinksOutput = imageLinks.thumbnail
                     }
+
+                    // fix the inconsitent results and return them
                     return {
                         title: this.checkString(title),
                         author: this.checkString(authors),
@@ -133,11 +153,15 @@ class App extends Component {
                         price: this.checkInteger(retailPrice),
                     }
                 })
+
+                //send all the retuls to the state
                 this.setState({
                     books: aBooks,
                     error: null
                 })
             })
+
+            //catch connection errors
             .catch(err => {
                 this.setState({
                     error: err.message
@@ -147,11 +171,14 @@ class App extends Component {
     }
 
     render() {
+
+        //if there is an error message display it
         const errorMessage = this.state.error ? <div>{this.state.error}</div> : false
 
+        //get all the books from the state
         const library = this.state.books
 
-
+        //map each book for the corresponding component
         const books = library.map((book, i) => {
             return <Book
                 key={i}
