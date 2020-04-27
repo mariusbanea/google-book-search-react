@@ -121,6 +121,7 @@ class App extends Component {
 
             // use the json api output
             .then(data => {
+                console.log(data);
                 // check if there are no results
                 if (data.totalItems === 0) {
                     throw new Error('No books found')
@@ -142,6 +143,13 @@ class App extends Component {
                         imageLinksOutput = imageLinks.thumbnail
                     }
 
+                    console.log(this.checkString(title));
+                    console.log(this.checkString(authors));
+                    console.log(this.checkString(description));
+                    console.log(this.checkURL(previewLink));
+                    console.log(this.checkURL(imageLinksOutput));
+                    console.log(this.checkInteger(saleability));
+                    console.log(this.checkInteger(retailPrice));
                     // fix the inconsitent results and return them
                     return {
                         title: this.checkString(title),
@@ -154,6 +162,7 @@ class App extends Component {
                     }
                 })
 
+                console.log(aBooks);
                 //send all the retuls to the state
                 this.setState({
                     books: aBooks,
