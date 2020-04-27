@@ -7,8 +7,9 @@ class Book extends React.Component {
         //get the saleability status
         const saleability = this.props.saleability
 
-        //if the book is free, there is no price to show
+        //if the book is free ...
         if (saleability === 'FREE') {
+            //... there is no price to show
             return (
                 <div>
                     <h2>{this.props.title}</h2>
@@ -27,22 +28,19 @@ class Book extends React.Component {
                 </div>
             )
         }
-        //if the book is NOT free, show the price details
+        //if the book is NOT free ...
         else {
+            //... get the price details
             const price = this.props.price
+            //if the price is set, display the USD value for it as the "priceTag"; if not display nothing
             const priceTag = (price) ? <h4>Price: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price.amount)}</h4> : false
 
             return (
                 <div>
                     <h2>{this.props.title}</h2>
                     <h2>{this.props.publisher}</h2>
-                    <a href={this.props.previewLink}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    >
-                        <img className='bookImage'
-                            src={this.props.thumbnail_URL}
-                            alt='bookimage' />
+                    <a href={this.props.previewLink} target='_blank' rel='noopener noreferrer'>
+                        <img className='bookImage' src={this.props.thumbnail_URL} alt='bookimage' />
                     </a>
                     <div>
                         <h3>Authors: {authors}</h3>

@@ -69,6 +69,8 @@ class App extends Component {
     //get the imput from the user
     handleSearch = (e) => {
         e.preventDefault()
+
+        //create an object to store the search filters
         const data = {}
 
         //get all the from data from the form component
@@ -84,7 +86,8 @@ class App extends Component {
             params: data
         })
 
-        console.log(data)
+        //check if the state is populated with the search params data
+        console.log(this.state.params)
 
         //get the google books api url
         const searchURL = 'https://www.googleapis.com/books/v1/volumes'
@@ -121,12 +124,16 @@ class App extends Component {
 
             // use the json api output
             .then(data => {
+
+                //check if there is meaningfull data
                 console.log(data);
+
                 // check if there are no results
                 if (data.totalItems === 0) {
                     throw new Error('No books found')
                 }
 
+                // create and object with each one of the results
                 const aBooks = data.items.map(book => {
 
                     // get the title, authors, description, imageLinks, previewLink from "volumeInfo"
@@ -143,6 +150,7 @@ class App extends Component {
                         imageLinksOutput = imageLinks.thumbnail
                     }
 
+                    //check if the data validation works
                     console.log(this.checkString(title));
                     console.log(this.checkString(authors));
                     console.log(this.checkString(description));
@@ -150,6 +158,7 @@ class App extends Component {
                     console.log(this.checkURL(imageLinksOutput));
                     console.log(this.checkInteger(saleability));
                     console.log(this.checkInteger(retailPrice));
+
                     // fix the inconsitent results and return them
                     return {
                         title: this.checkString(title),
@@ -162,8 +171,10 @@ class App extends Component {
                     }
                 })
 
+                //check if the validated data is structured in a new array objects
                 console.log(aBooks);
-                //send all the retuls to the state
+
+                //send all the results to the state
                 this.setState({
                     books: aBooks,
                     error: null
