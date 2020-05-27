@@ -66,6 +66,18 @@ class App extends Component {
         return outputURL
     }
 
+    // if a URL is undefinded or null, default it to the root url "/"
+    checkEmptyImage(inputURL) {
+        let outputURL = inputURL
+        if (inputURL === undefined) {
+            outputURL = "https://legacytaylorsville.com/wp-content/uploads/2015/07/No-Image-Available1.png"
+        }
+        if (inputURL == null) {
+            outputURL = "https://legacytaylorsville.com/wp-content/uploads/2015/07/No-Image-Available1.png"
+        }
+        return outputURL
+    }
+
     //get the imput from the user
     handleSearch = (e) => {
         e.preventDefault()
@@ -142,33 +154,22 @@ class App extends Component {
                     // get the saleability, retailPrice from "saleInfo"
                     const { saleability, retailPrice } = book.saleInfo
 
-                    //if the image is not defined replace it with a no-image image
-                    let imageLinksOutput = ''
-                    if (imageLinks === undefined) {
-                        imageLinksOutput = 'https://legacytaylorsville.com/wp-content/uploads/2015/07/No-Image-Available1.png'
-                    } else {
-                        imageLinksOutput = imageLinks.thumbnail
-                    }
 
-                    //check if the data validation works
-                    console.log(this.checkString(title));
-                    console.log(this.checkString(authors));
-                    console.log(this.checkString(description));
-                    console.log(this.checkURL(previewLink));
-                    console.log(this.checkURL(imageLinksOutput));
-                    console.log(this.checkInteger(saleability));
-                    console.log(this.checkInteger(retailPrice));
-
-                    // fix the inconsitent results and return them
-                    return {
+                    let validatedOutput = {
                         title: this.checkString(title),
                         author: this.checkString(authors),
                         description: this.checkString(description),
                         previewLink: this.checkURL(previewLink),
-                        thumbnail_URL: this.checkURL(imageLinksOutput),
+                        thumbnail_URL: this.checkEmptyImage(imageLinks.thumbnail),
                         saleability: this.checkInteger(saleability),
                         price: this.checkInteger(retailPrice),
                     }
+
+                    //check if the data validation works
+                    console.log(validatedOutput);
+
+                    // fix the inconsitent results and return them
+                    return validatedOutput;
                 })
 
                 //check if the validated data is structured in a new array objects
@@ -195,11 +196,8 @@ class App extends Component {
         //if there is an error message display it
         const errorMessage = this.state.error ? <div>{this.state.error}</div> : false
 
-        //get all the books from the state
-        const library = this.state.books
-
-        //map each book for the corresponding component
-        const books = library.map((book, i) => {
+        //get all the books from the state and map each book for the corresponding component
+        const books = this.state.books.map((book, i) => {
             return <Book
                 key={i}
                 title={book.title}
@@ -218,7 +216,9 @@ class App extends Component {
                 <Header />
                 <Search handleSearch={this.handleSearch} />
                 {errorMessage}
+                <div className="search-results-wrapper">
                 {books}
+                </div>
             </div>
         )
     }

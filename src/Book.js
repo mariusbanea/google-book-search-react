@@ -11,7 +11,7 @@ class Book extends React.Component {
         if (saleability === 'FREE') {
             //... there is no price to show
             return (
-                <div>
+                <div className="search-results-item">
                     <h2>{this.props.title}</h2>
                     <a href={this.props.previewLink}>
                         <img className='bookImage'
@@ -36,7 +36,7 @@ class Book extends React.Component {
             const priceTag = (price) ? <h4>Price: {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price.amount)}</h4> : false
 
             return (
-                <div>
+                <div className="search-results-item">
                     <h2>{this.props.title}</h2>
                     <h2>{this.props.publisher}</h2>
                     <a href={this.props.previewLink} target='_blank' rel='noopener noreferrer'>
